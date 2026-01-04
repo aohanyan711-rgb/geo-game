@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+    <meta charset="UTF-8">
+    <title>Իմ Աշխարհագրական Խաղը</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; background: #f0f0f0; padding: 50px; }
+        .box { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); display: inline-block; }
+        input { padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 5px; }
+        button { padding: 10px 20px; font-size: 16px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1>Բարի գալուստ իմ խաղ!</h1>
+        <p>Գուշակիր թաքնված բառը:</p>
+        <input type="text" id="answer" placeholder="Գրիր այստեղ...">
+        <button onclick="check()">Ստուգել</button>
+        <p id="msg"></p>
+    </div>
+
+    <script>
+        function check() {
+            let val = document.getElementById('answer').value.toLowerCase();
+            if(val === 'հայաստան') {
+                document.getElementById('msg').innerText = "Ճիշտ է! 🎉";
+                document.getElementById('msg').style.color = "green";
+            } else {
+                document.getElementById('msg').innerText = "Սխալ է, փորձիր նորից:";
+                document.getElementById('msg').style.color = "red";
+            }
+        }
+    </script>
+</body>
+</html>
