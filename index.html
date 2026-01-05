@@ -3,89 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Աշխարհագրական Վիկտորինա</title>
+    <title>Իմ Աշխարհագրական Խաղը</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: white; text-align: center; padding: 20px; margin: 0; }
-        .container { background: #1e293b; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: inline-block; width: 95%; max-width: 550px; border: 2px solid #38bdf8; margin-top: 20px; }
-        .country-box { font-size: 1.4rem; background: #0ea5e9; color: white; padding: 10px 25px; border-radius: 50px; font-weight: bold; margin-bottom: 15px; display: inline-block; }
-        .scrambled { font-size: 1.8rem; letter-spacing: 2px; margin: 20px 0; color: #fbbf24; text-shadow: 1px 1px #000; font-weight: bold; min-height: 100px; display: flex; align-items: center; justify-content: center; word-wrap: break-word; line-height: 1.4; padding: 0 10px; }
-        input { padding: 15px; font-size: 1.1rem; border-radius: 10px; border: 2px solid #334155; width: 85%; margin-bottom: 15px; text-align: center; background: #0f172a; color: white; outline: none; }
-        button { padding: 15px; font-size: 1.1rem; cursor: pointer; border: none; border-radius: 10px; background: #10b981; color: white; font-weight: bold; width: 90%; }
-        #message { margin-top: 15px; font-size: 1.1rem; min-height: 25px; font-weight: bold; }
-        .progress { margin-top: 15px; color: #64748b; font-size: 0.9rem; }
+        body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: white; text-align: center; padding: 20px; }
+        .container { background: #1e293b; padding: 30px; border-radius: 20px; border: 3px solid #38bdf8; display: inline-block; width: 90%; max-width: 500px; margin-top: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .country-name { background: #0ea5e9; padding: 10px 20px; border-radius: 50px; font-weight: bold; font-size: 1.5rem; display: inline-block; margin-bottom: 20px; }
+        .scrambled { font-size: 2rem; color: #fbbf24; margin: 20px 0; letter-spacing: 4px; font-weight: bold; background: #334155; padding: 15px; border-radius: 10px; min-height: 40px; word-break: break-all; }
+        input { padding: 15px; font-size: 1.2rem; width: 85%; border-radius: 10px; border: 2px solid #334155; margin-bottom: 15px; text-align: center; background: #0f172a; color: white; outline: none; }
+        input:focus { border-color: #38bdf8; }
+        .btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+        button { padding: 12px 25px; font-size: 1.1rem; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .check-btn { background: #10b981; color: white; }
+        .hint-btn { background: #64748b; color: white; }
+        button:hover { opacity: 0.8; transform: translateY(-2px); }
+        #message { margin-top: 20px; font-weight: bold; font-size: 1.2rem; min-height: 30px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div id="country-display" class="country-box">Բեռնվում է...</div>
+    <div id="country-display" class="country-name">Բեռնվում է...</div>
+    <p>Գուշակիր թաքնված բառը․</p>
     <div class="scrambled" id="scrambled-word"></div>
-    <input type="text" id="user-input" placeholder="Մուտքագրիր պատասխանը..." autocomplete="off">
-    <br>
-    <button onclick="checkAnswer()">ՍՏՈՒԳԵԼ</button>
+    <input type="text" id="user-input" placeholder="Գրիր պատասխանը..." autocomplete="off">
+    <div class="btns">
+        <button class="check-btn" onclick="checkAnswer()">ՍՏՈՒԳԵԼ</button>
+        <button class="hint-btn" onclick="showHint()">ՀՈՒՇՈՒՄ</button>
+    </div>
     <div id="message"></div>
-    <div class="progress">Երկիր՝ <span id="c-num">1</span>/4 | Բառ՝ <span id="w-num">1</span>/<span id="w-total">0</span></div>
 </div>
 
 <script>
     const gameData = [
-        { 
-            country: "ԻՏԱԼԻԱ", 
-            words: ["ՀՌՈՄ", "ՀԱՎԵՐԺԱԿԱՆ ՔԱՂԱՔ", "ԿՈԼԻԶԵՅ", "ՎԵՆԵՏԻԿ", "ԿԱՌՆԱՎԱԼ", "ՄԻՋԵՐԿՐԱԿԱՆ ԾՈՎ", "ՄԻՔԵԼԱՆՋԵԼՈ"] 
-        },
-        { 
-            country: "ԳԵՐՄԱՆԻԱ", 
-            words: ["ՀՌԵՆՈՍ", "ՄԱՐՇԵՐ", "ԿԱՐԳԱՊԱՀՈՒԹՅՈՒՆ ԵՎ ԱՇԽԱՏԱՍԻՐՈՒԹՅՈՒՆ", "ՀՅՈՒՐ ԱՇԽԱՏՈՂՆԵՐ", "ՄՅՈՒՆԽԵՆ", "ՔՅՈԼՆ"] 
-        },
-        { 
-            country: "ՖՐԱՆՍԻԱ", 
-            words: ["ԿՈՐՍԻԿԱ ԿՂԶԻ", "ՍԵՆԸ", "ԿԱՆՆ", "ՆԻՑՑԱ", "ԼԱ ՄԱՆՇ", "ԱԶՆԱՎՈՒՐ", "ԼՈՒՎՐ"] 
-        },
-        { 
-            country: "ՄԵԾ ԲՐԻՏԱՆԻԱ", 
-            words: ["ՉԵՐՉԻԼ", "ԾՈՎԵՐԻ ԹԱԳՈՒՀԻ", "ՎԵՍՏՄԻՍԹԵՐՅԱՆ ԹԱԳԱՎՈՐԱԿԱՆ ՊԱԼԱՏ", "ՕՔՍՖՈՐԴԸ", "ՍՏՈՐՋՐՅԱ ՀԵՌԱԽՈՍԱԳԻԾ", "ՄԵՏՐՈՊՈԼԻՏԵՆ", "ՇՈՏԼԱՆԴԻԱ"] 
-        }
-    ];
-
-    let currentCountryIdx = 0;
-    let currentWordIdx = 0;
-
-    function scramble(word) {
-        return word.split(' ').map(w => {
-            let a = w.split("");
-            if (a.length < 2) return w;
-            for (let i = a.length - 1; i > 0; i--) {
-                let j = Math.floor(Math.random() * (i + 1));
-                [a[i], a[j]] = [a[j], a[i]];
-            }
-            return a.join("");
-        }).join(" &nbsp; ");
-    }
-
-    function initGame() {
-        if (currentCountryIdx >= gameData.length) {
-            document.querySelector('.container').innerHTML = "<h2>ՇՆՈՐՀԱՎՈՐ! 🎉<br>Դու հաղթեցիր բոլոր փուլերը:</h2><button onclick='location.reload()'>ՍԿՍԵԼ ՆՈՐԻՑ</button>";
-            return;
-        }
-        let country = gameData[currentCountryIdx];
-        document.getElementById('country-display').innerText = country.country;
-        document.getElementById('scrambled-word').innerHTML = scramble(country.words[currentWordIdx]);
-        document.getElementById('w-total').innerText = country.words.length;
-        document.getElementById('w-num').innerText = currentWordIdx + 1;
-        document.getElementById('c-num').innerText = currentCountryIdx + 1;
-        document.getElementById('user-input').value = "";
-        document.getElementById('message').innerText = "";
-    }
-
-    function checkAnswer() {
-        let userVal = document.getElementById('user-input').value.trim().toUpperCase().replace(/[«»]/g, '');
-        let correctVal = gameData[currentCountryIdx].words[currentWordIdx].toUpperCase().replace(/[«»]/g, '');
-
-        if (userVal === correctVal) {
-            document.getElementById('message').innerText = "ՃԻՇՏ Է! ✨";
-            document.getElementById('message').style.color = "#10b981";
-            currentWordIdx++;
-            if (currentWordIdx >= gameData[currentCountryIdx].words.length) {
-                currentWordIdx = 0;
-                currentCountryIdx++;
-            }
+        { country: "ԻՏԱԼԻԱ", words: ["ՀՌՈՄ", "ՀԱՎԵՐԺԱԿԱՆ ՔԱՂԱՔ", "ԿՈԼԻԶԵՅ", "ՎԵՆԵՏԻԿ", "ԿԱՌՆԱՎԱԼ", "ՄԻՋԵՐԿՐԱԿԱՆ ԾՈՎ", "ՄԻՔԵԼԱՆՋԵԼՈ"] },
+        { country: "ԳԵՐՄԱՆԻԱ", words: ["ՀՌԵՆՈՍ", "ՄԱՐՇԵՐ", "ԿԱՐԳԱՊԱՀՈՒԹՅՈՒՆ ԵՎ ԱՇԽԱՏԱՍԻՐՈՒԹՅՈՒՆ", "ՀՅՈՒՐ ԱՇԽԱՏՈ
